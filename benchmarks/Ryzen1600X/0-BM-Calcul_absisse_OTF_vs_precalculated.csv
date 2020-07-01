@@ -1,0 +1,27 @@
+06/29/20 16:09:30
+Running C:\Users\Sous-sol\Desktop\CODES\Time_domain\Moments_cumulants\benchmark.exe
+Run on (12 X 3593 MHz CPU s)
+CPU Caches:
+  L1 Data 32 KiB (x6)
+  L1 Instruction 64 KiB (x6)
+  L2 Unified 512 KiB (x6)
+  L3 Unified 8192 KiB (x2)
+name,iterations,real_time,cpu_time,time_unit,bytes_per_second,items_per_second,label,error_occurred,error_message
+"MOMENT_2D_ABSCISSE/128/real_time",3024,232512,232515,ns,,,,,
+"MOMENT_2D_ABSCISSE/256/real_time",754,907763,911804,ns,,,,,
+"MOMENT_2D_ABSCISSE/512/real_time",188,3.76116e+06,3.74003e+06,ns,,,,,
+"MOMENT_2D_ABSCISSE/1024/real_time",47,1.4722e+07,1.46277e+07,ns,,,,,
+"MOMENT_2D_ABSCISSE/2048/real_time",10,6.07847e+07,6.09375e+07,ns,,,,,
+"MOMENT_2D_ABSCISSE/4096/real_time",3,2.48535e+08,2.5e+08,ns,,,,,
+"MOMENT_2D_ABSCISSE/8192/real_time",1,1.11289e+09,1.10938e+09,ns,,,,,
+"MOMENT_2D_ABSCISSE/real_time_BigO",,114856,114604,N,,,,,
+"MOMENT_2D_ABSCISSE/real_time_RMS",,0.64589,0.64186,,,,,,
+"MOMENT_2D_BIN_CENTER/128/real_time",3004,233855,234063,ns,,,,,
+"MOMENT_2D_BIN_CENTER/256/real_time",738,933910,952744,ns,,,,,
+"MOMENT_2D_BIN_CENTER/512/real_time",188,3.69093e+06,3.74003e+06,ns,,,,,
+"MOMENT_2D_BIN_CENTER/1024/real_time",47,1.48034e+07,1.46277e+07,ns,,,,,
+"MOMENT_2D_BIN_CENTER/2048/real_time",10,6.05863e+07,6.09375e+07,ns,,,,,
+"MOMENT_2D_BIN_CENTER/4096/real_time",2,2.57757e+08,2.57812e+08,ns,,,,,
+"MOMENT_2D_BIN_CENTER/8192/real_time",1,1.11798e+09,1.10938e+09,ns,,,,,
+"MOMENT_2D_BIN_CENTER/real_time_BigO",,115741,114962,N,,,,,
+"MOMENT_2D_BIN_CENTER/real_time_RMS",,0.633799,0.62947,,,,,,

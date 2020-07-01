@@ -1,0 +1,34 @@
+template <class BinType,class AbscisseType>
+double moment(BinType* histogram , AbscisseType first_bin_center , AbscisseType bin_width , uint n_bins , uint exp  , uint64_t n_total )
+{
+    uint bin_value = first_bin_center - bin_width ;
+    double val = 0;   
+	for (uint i=0; i<n_bins; i++)
+	{
+		bin_value += bin_width ;
+		val += histogram[i] * pow(bin_value, exp);
+	} 
+    return val/n_total;
+}
+
+
+
+template <class BinType,class AbscisseType>
+double moment(BinType* histogram , AbscisseType first_bin_center , AbscisseType bin_width , uint n_bins , uint exp_x , uint exp_y , uint64_t n_total )
+{
+    uint bin_value_x = first_bin_center - bin_width ;
+    uint bin_value_y = first_bin_center - bin_width ;
+    double val = 0;
+	double y_power = 0;
+	for (uint j=0; j<n_bins; j++)
+	{
+		bin_value_y += bin_width ;
+		y_power = pow(bin_value_y, exp_y);
+		for (uint i=0; i<n_bins; i++)
+		{
+			bin_value_x += bin_width ;
+			val += histogram[n_bins*j + i] * pow(bin_value_x, exp_x) * y_power;
+		}
+	} 
+    return val/n_total;
+}

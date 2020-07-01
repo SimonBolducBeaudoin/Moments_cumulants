@@ -1,85 +1,120 @@
-# All Submodule directorie
-FFT_benchmark = SM-FFT_benchmark
-Buffered_arrays = SM-Buffered_arrays
-Scoped_timer = SM-Scoped_timer
-Moments_cumulants = SM-Moments_cumulants
-Histograms = SM-Histograms
-OMP_EXTRA = SM-Omp_extra
-MATH_EXTRA = SM-Math_extra
-Time_quadratures = SM-Time_quadratures
-Fast_convolution = SM-Fast_convolution
-Windowing = SM-Windowing
-Special_functions = SM-Special_functions
-Numerical_integration = SM-Numerical_integration
+NAME = moments_cumulants
+PYLIB_EXT = $(if $(filter $(OS),Windows_NT),.pyd,.so)
+TARGET_STATIC = lib$(NAME).a
+TARGET_PYLIB = ../Python/$(NAME)$(PYLIB_EXT)
 
-# standard subdirectories
+MULTI_ARRAY = ../Multi_array
+OMP_EXTRA = ../Omp_extra
+MOMENTS_CUMULANTS = ../Moments_cumulants
+MATH_EXTRA = ../Math_extra
+HISTOGRAMS = ../Histograms
+LIBS = ../libs
+
 IDIR = includes
 ODIR = obj
 LDIR = lib
 SDIR = src
 
-# All the external objects that the current submodule depends on
-# Those objects have to be up to date
-tempo1 = $(wildcard ../SM-Math_extra/*.o)
-tempo2 = $(wildcard ../SM-Omp_extra/obj/*.o)
-EXTERNAL_OBJ = $(tempo1) $(tempo2)
+OMP_EXTRA_OBJ = $(wildcard $(OMP_EXTRA)/$(ODIR)/*.o)
+MATH_EXTRA_OBJ = $(wildcard $(MATH_EXTRA)/$(ODIR)/*.o)
 
-# TARGET
-TARGET = moments_cumulants.a
-SRC  = $(wildcard *.cpp)
-OBJ  = $(patsubst %.cpp, %.o, $(SRC))
-DEPS = $(OBJ:.o=.d)
+EXTERNAL_OBJ = $(OMP_EXTRA_OBJ) $(MATH_EXTRA_OBJ)
+EXTERNAL_INCLUDES = -I$(OMP_EXTRA)/$(IDIR) -I$(MATH_EXTRA)/$(IDIR) -I$(MOMENTS_CUMULANTS)/$(IDIR)
 
-# Lits of .c and corresponding .o and .h
 SRC  = $(wildcard $(SDIR)/*.cpp)
 OBJ  = $(patsubst $(SDIR)/%.cpp,$(ODIR)/%.o,$(SRC))
+ASS  = $(patsubst $(SDIR)/%.cpp,$(ODIR)/%.s,$(SRC))
+DEPS = $(OBJ:.o=.d)
 
-# Toolchain, using mingw on windows
-CC = $(OS:Windows_NT=x86_64-w64-mingw32-)g++
+CXX = $(OS:Windows_NT=x86_64-w64-mingw32-)g++
+OPTIMIZATION = -O3 -march=native
+CPP_STD = -std=c++14
+WARNINGS = -Wall
+MINGW_COMPATIBLE = $(OS:Windows_NT=-DMS_WIN64 -D_hypot=hypot)
+DEPS_FLAG = -MMD -MP
 
-# flags
-CFLAGS = -Ofast -march=native -std=c++14 -MMD -MP -Wall $(OS:Windows_NT=-DMS_WIN64 -D_hypot=hypot) -I$(IDIR)
-OMPFLAGS = -fopenmp -fopenmp-simd
-# FFTWFLAGS = -lfftw3 -lfftw3f -lm
-SHRFLAGS = -fPIC -shared
+POSITION_INDEP = -fPIC
+SHARED = -shared
 
-# Python directories
+OMP = -fopenmp -fopenmp-simd
+MATH = -lm
+
 PY = $(OS:Windows_NT=/c/Anaconda2/)python
-ifeq ($(USERNAME),simon)
-    PY = $(OS:Windows_NT=/cygdrive/c/Anaconda2/)python
-endif
-ifeq ($(USERNAME),Sous-sol)
-    PY = $(OS:Windows_NT=/cygdrive/c/ProgramData/Anaconda2/)python
-endif
 
-# includes
-PYINCL := $(shell $(PY) -m pybind11 --includes)
+PY_INCL := $(shell $(PY) -m pybind11 --includes)
 ifneq ($(OS),Windows_NT)
-    PYINCL += -I /usr/include/python2.7/
+    PY_INCL += -I /usr/include/python2.7/
 endif
 
-# libraries
-LDLIBS = $(OS:Windows_NT=-L /c/Anaconda2/libs/ -l python27) $(PYINCL)
-ifeq ($(USERNAME),simon)
-    LDLIBS = $(OS:Windows_NT=-L /cygdrive/c/Anaconda2/libs/ -l python27) $(PYINCL)
-endif
-ifeq ($(USERNAME),Sous-sol)
-    LDLIBS = $(OS:Windows_NT=-L /cygdrive/c/ProgramData/Anaconda2/libs/ -l python27) $(PYINCL) 
-endif
+PY_LINKS = $(OS:Windows_NT=-L /c/Anaconda2/ -lpython27)
     
-$(TARGET) : $(OBJ)
-	@ echo " "
-	@ echo "---------Compiling static library $(TARGET)---------"
-	ar cr $(TARGET) $(OBJ) $(EXTERNAL_OBJ) 
+LINKS =  $(OMP) $(PY_LINKS)
+LINKING = $(CXX) $(OPTIMIZATION) $(POSITION_INDEP) $(SHARED)  -o $(TARGET_PYLIB) $(OBJ) $(LINKS) $(EXTERNAL_OBJ) $(DEPS_FLAG) $(MINGW_COMPATIBLE)
+STATIC_LIB = ar cr $(TARGET_STATIC) $(OBJ) 
 
+INCLUDES = $(OMP) $(PY_INCL) $(EXTERNAL_INCLUDES)
+COMPILE = $(CXX) $(CPP_STD) $(OPTIMIZATION) $(POSITION_INDEP) $(WARNINGS) -c -o $@ $< $(INCLUDES) $(DEPS_FLAG) $(MINGW_COMPATIBLE)
+ASSEMBLY = $(CXX) $(CPP_STD) $(OPTIMIZATION) $(POSITION_INDEP) $(WARNINGS) -S -o $@ $< $(INCLUDES) $(DEPS_FLAG) $(MINGW_COMPATIBLE)
+
+LINK_BENCHMARK = \
+	-L$(LIBS)/benchmark/build/src -lbenchmark -lpthread -lshlwapi \
+	$(OMP) 
+
+LINKING_BENCHMARK = \
+	$(CXX) $< obj/moments_cumulants.o $(EXTERNAL_OBJ) -O0 -march=native \
+	-static \
+	$(LINK_BENCHMARK)\
+	$(DEPS_FLAG) $(MINGW_COMPATIBLE) \
+	-o $@ 
+
+INCLUDES_BENCHMARK = \
+	-I $(LIBS)/benchmark/include \
+	$(INCLUDES)
+	
+COMPILE_BENCHMARK = \
+	$(CXX) $(CPP_STD) $< -O0 -march=native \
+	$(INCLUDES_BENCHMARK) \
+	$(DEPS_FLAG) $(MINGW_COMPATIBLE) \
+	-c -o $@
+
+compile_objects : $(OBJ)
+
+assembly : $(ASS)
+
+all : $(TARGET_PYLIB) $(TARGET_STATIC) $(OBJ) $(ASS)
+
+static_library : $(TARGET_STATIC)
+
+benchmark : benchmark.exe
+
+$(TARGET_STATIC) : $(OBJ)
+	@ echo " "
+	@ echo "---------Compiling static library $(TARGET_STATIC)---------"
+	$(STATIC_LIB)
+	
+benchmark.exe : benchmark.o
+	@ echo " "
+	@ echo "---------Compile $@ ---------"
+	$(LINKING_BENCHMARK)
+
+benchmark.o : benchmark.cpp
+	@ echo " "
+	@ echo "---------Compile $@ from $< ---------"
+	$(COMPILE_BENCHMARK)	
+	
 $(ODIR)/%.o : $(SDIR)/%.cpp
 	@ echo " "
 	@ echo "---------Compile object $@ from $<--------"
-	$(CC) $(SHRFLAGS) -c -Wall -o $@ $< $(CFLAGS) $(FFTWFLAGS) $(OMPFLAGS) $(LDLIBS)
-
+	$(COMPILE)
+	
+$(ODIR)/%.s : $(SDIR)/%.cpp
+	@ echo " "
+	@ echo "---------Assembly $@ from $<--------"
+	$(ASSEMBLY)
+	
 -include $(DEPS)
 
 clean:
-	@rm -f $(TARGET) $(OBJ)
+	@rm -f $(TARGET_STATIC) $(OBJ) $(ASS) $(DEPS)
 	 	 
-.PHONY: clean
+.PHONY: all , clean , compile_objects , static_library , assembly , benchmark

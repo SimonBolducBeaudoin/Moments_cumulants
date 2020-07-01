@@ -1,0 +1,29 @@
+06/29/20 16:11:22
+Running C:\Users\Sous-sol\Desktop\CODES\Time_domain\Moments_cumulants\benchmark.exe
+Run on (12 X 3593 MHz CPU s)
+CPU Caches:
+  L1 Data 32 KiB (x6)
+  L1 Instruction 64 KiB (x6)
+  L2 Unified 512 KiB (x6)
+  L3 Unified 8192 KiB (x2)
+------------------------------------------------------------------------------
+Benchmark                                    Time             CPU   Iterations
+------------------------------------------------------------------------------
+MOMENT_2D_ABSCISSE/128/real_time        231008 ns       235193 ns         3056
+MOMENT_2D_ABSCISSE/256/real_time        918778 ns       922819 ns          745
+MOMENT_2D_ABSCISSE/512/real_time       3672279 ns      3681283 ns          191
+MOMENT_2D_ABSCISSE/1024/real_time     14649959 ns     14627660 ns           47
+MOMENT_2D_ABSCISSE/2048/real_time     59909010 ns     59375000 ns           10
+MOMENT_2D_ABSCISSE/4096/real_time    248065710 ns    250000000 ns            3
+MOMENT_2D_ABSCISSE/8192/real_time   1113912106 ns   1109375000 ns            1
+MOMENT_2D_ABSCISSE/real_time_BigO    114907.10 N     114567.83 N    
+MOMENT_2D_ABSCISSE/real_time_RMS            65 %            64 %    
+MOMENT_2D_BIN_CENTER/128/real_time      233230 ns       233907 ns         3006
+MOMENT_2D_BIN_CENTER/256/real_time      926425 ns       921639 ns          729
+MOMENT_2D_BIN_CENTER/512/real_time     3698990 ns      3720238 ns          189
+MOMENT_2D_BIN_CENTER/1024/real_time   14775743 ns     14960106 ns           47
+MOMENT_2D_BIN_CENTER/2048/real_time   60116506 ns     59375000 ns           10
+MOMENT_2D_BIN_CENTER/4096/real_time  251640002 ns    250000000 ns            3
+MOMENT_2D_BIN_CENTER/8192/real_time 1114953041 ns   1109375000 ns            1
+MOMENT_2D_BIN_CENTER/real_time_BigO  115172.40 N     114571.85 N    
+MOMENT_2D_BIN_CENTER/real_time_RMS          64 %            64 %    
