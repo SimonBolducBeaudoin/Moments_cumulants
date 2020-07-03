@@ -35,6 +35,13 @@ double moment(BinType* histogram , AbscisseType* bins , uint n_bins , uint exp ,
 template <class BinType,class AbscisseType>
 double moment(BinType* histogram , AbscisseType* bins , uint n_bins , uint exp_x , uint exp_y , uint64_t n_total , int n_threads );
 
+template <class BinType,class AbscisseType>
+double moment_no_clip(BinType* histogram , AbscisseType* bins , uint n_bins , uint exp , uint64_t n_total , int n_threads );
+
+template <class BinType,class AbscisseType>
+double moment_no_clip(BinType* histogram , AbscisseType* bins , uint n_bins , uint exp_x , uint exp_y , uint64_t n_total , int n_threads );
+
+
 /*
 Ref:
 http://www.stat.uchicago.edu/~pmcc/courses/stat306/2017/cumulants.pdf
