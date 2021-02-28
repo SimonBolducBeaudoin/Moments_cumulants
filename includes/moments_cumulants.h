@@ -30,16 +30,16 @@ moment( histogram , bins , n_bins , exp_x , ... , n_total )
 */
 
 template <class BinType,class AbscisseType>
-double moment(BinType* histogram , AbscisseType* bins , uint n_bins , uint exp , uint64_t n_total , int n_threads );
+double moment(BinType* histogram , AbscisseType* bins , uint n_bins , uint exp , uint64_t n_total , int n_threads , bool no_clip = false );
 
 template <class BinType,class AbscisseType>
-double moment(BinType* histogram , AbscisseType* bins , uint n_bins , uint exp_x , uint exp_y , uint64_t n_total , int n_threads );
+double moment(BinType* histogram , AbscisseType* bins , uint n_bins , uint exp_x , uint exp_y , uint64_t n_total , int n_threads , bool no_clip = false );
 
 template <class BinType,class AbscisseType>
-double moment_no_clip(BinType* histogram , AbscisseType* bins , uint n_bins , uint exp , uint64_t n_total , int n_threads );
+double centered_moment(BinType* histogram , AbscisseType* bins , uint n_bins , uint exp , uint64_t n_total , int n_threads , bool no_clip = false );
 
 template <class BinType,class AbscisseType>
-double moment_no_clip(BinType* histogram , AbscisseType* bins , uint n_bins , uint exp_x , uint exp_y , uint64_t n_total , int n_threads );
+double centered_moment(BinType* histogram , AbscisseType* bins , uint n_bins , uint exp_x , uint exp_y , uint64_t n_total , int n_threads , bool no_clip = false );
 
 
 /*
